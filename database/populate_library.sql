@@ -1,6 +1,7 @@
 -- Insert sample users (mix of 'patron' and 'admin')
+-- The unhashed password is 'password'
 INSERT INTO users (username, password_hash, user_type) VALUES
-('alice', '87c8d21353c66ae15b22243d29100605', 'patron'),
+('alice', '87c8d21353c66ae15b22243d29100605', 'patron'), 
 ('bob', '87c8d21353c66ae15b22243d29100605', 'patron'),
 ('charlie', '87c8d21353c66ae15b22243d29100605', 'admin'),
 ('diana', '87c8d21353c66ae15b22243d29100605', 'patron'),

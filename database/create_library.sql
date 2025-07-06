@@ -1,5 +1,3 @@
--- Based on this schema create a dataclass model that should represent a borrow for a specific user
-
 -- Create users table
 CREATE TABLE users (
     user_id       INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -28,11 +26,3 @@ CREATE TABLE borrows (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (book_id) REFERENCES books(book_id) ON DELETE CASCADE
 );
-
--- An example of one of the classes being used for borrows is this
-
--- @dataclass
--- class BorrowSummary:
---     borrow_id: int
---     borrow_date: str
---     returned: bool
