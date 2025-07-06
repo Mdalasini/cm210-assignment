@@ -63,11 +63,25 @@ This repository contains the API for the Library Management System being develop
 
 1. **Install dependencies**
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+    ```bash
+    # Using Poetry (recommended)
+    poetry install
 
-2. **Create the database**
+    # Using pip
+    pip install -r requirements.txt
+    ```
+
+2. **Run the application**
+
+    ```bash
+    # Using poetry
+    poetry run python main.py
+
+    # Using pip
+    python main.py
+    ```
+
+3. **Create the database**
 
    From the project root:
 
