@@ -64,8 +64,8 @@ This repository contains the API for the Library Management System being develop
 1. **Install dependencies**
 
     ```bash
-    # Using Poetry (recommended)
-    poetry install
+    # Using uv (recommended)
+    uv sync 
 
     # Using pip
     pip install -r requirements.txt
@@ -75,7 +75,7 @@ This repository contains the API for the Library Management System being develop
 
     ```bash
     # Using poetry
-    poetry run python main.py
+    uv run python main.py
 
     # Using pip
     python main.py
