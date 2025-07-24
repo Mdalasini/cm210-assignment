@@ -28,14 +28,14 @@ def login():
         user = UserCredentials(**request.get_json())
 
         if not UserService.username_exists(user.username):
-            return jsonify({"error": "User does not exist"})
+            return jsonify({"error": "User does not exist"}), 404
 
         summary = UserService.get_user_summary(user)
         if summary is None:
-            return jsonify({"error": "Incorrect password"})
+            return jsonify({"error": "Incorrect password"}), 401
 
         token = Middleware.create_token(summary)
-        resp = make_response("Logged in")
+        resp = make_response("Logged in", 200)
         resp.set_cookie("token", token)
         return resp
 
@@ -46,26 +46,26 @@ def login():
 @app.route("/all/books", methods=["GET"])
 def all_books():
     books = BookService.get_all()
-    return jsonify([asdict(book) for book in books])
+    return jsonify([asdict(book) for book in books]), 200
 
 
 @app.route("/all/borrows", methods=["GET"])
 def all_borrows():
     borrows = BorrowService.get_all()
-    return jsonify([asdict(borrow) for borrow in borrows])
+    return jsonify([asdict(borrow) for borrow in borrows]), 200
 
 
 @app.route("/user/borrows", methods=["GET"])
 def user_borrows():
     user_id = request.args.get("id", type=int)
     if user_id is None:
-        return jsonify({"error": "Invalid arguments"}), 401
+        return jsonify({"error": "Invalid arguments"}), 400
 
     try:
         borrows = BorrowService.get_users(user_id)
-        return jsonify([asdict(borrow) for borrow in borrows])
+        return jsonify([asdict(borrow) for borrow in borrows]), 200
     except ValueError as e:
-        return jsonify({"error": str(e)}), 401
+        return jsonify({"error": str(e)}), 404
 
 
 @app.route("/new/user", methods=["POST"])
@@ -78,10 +78,10 @@ def sign_up():
     try:
         summary = UserService.new_user(user)
     except ValueError as e:
-        return jsonify({"error": str(e)}), 401
+        return jsonify({"error": str(e)}), 409
 
     token = Middleware.create_token(summary)
-    resp = make_response("Logged in")
+    resp = make_response("Logged in", 201)
     resp.set_cookie("token", token)
     return resp
 
@@ -97,9 +97,9 @@ def new_book():
     try:
         BookService.new_book(book)
     except ValueError as e:
-        return jsonify({"error": str(e)}), 401
+        return jsonify({"error": str(e)}), 409
 
-    return jsonify({"message": "Book created successfully"}), 200
+    return jsonify({"message": "Book created successfully"}), 201
 
 
 @app.route("/new/borrow", methods=["POST"])
@@ -113,9 +113,9 @@ def new_borrow():
     try:
         BorrowService.new_borrow(borrow, 1)  # ! use current user's id
     except ValueError as e:
-        return jsonify({"error": str(e)}), 401
+        return jsonify({"error": str(e)}), 400
 
-    return jsonify({"message": "Book borrowed successfully"}), 200
+    return jsonify({"message": "Book borrowed successfully"}), 201
 
 
 @app.route("/new/return", methods=["POST"])
@@ -128,6 +128,6 @@ def new_return():
     try:
         BorrowService.new_return(borrow_id, 1)  # ! use current user's id
     except ValueError as e:
-        return jsonify({"error": str(e)}), 401
+        return jsonify({"error": str(e)}), 404
 
     return jsonify({"message": "Borrow returned successfully"}), 200
